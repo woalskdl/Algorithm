@@ -1,12 +1,8 @@
 package kjm;
 
 import java.io.*;
-import java.math.*;
-import java.text.*;
-import java.util.*;
-import java.util.regex.*;
 
-public class P6_other_1 {
+public class FESTIVAL_other_1 {
 
     static BufferedReader input_stdin = new BufferedReader(new InputStreamReader(System.in));
     //입력의 첫 줄에는 테스트 케이스의 수 C (C ≤ 100)가 주어집니다.

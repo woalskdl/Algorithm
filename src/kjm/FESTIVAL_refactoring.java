@@ -3,9 +3,8 @@ package kjm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
-public class P6 {
+public class FESTIVAL_refactoring {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
@@ -21,24 +20,24 @@ public class P6 {
             String costStr = br.readLine();
             String[] costStrArr = costStr.split(" ");
 
-            int[] costs = new int[N];
             int[] costSums = new int[N];
 
-            for (int j = 0; j < N; j++) {
-                costs[j] = Integer.parseInt(costStrArr[j]);
-                costSums[j] = j > 0 ? costSums[j - 1] + costs[j] : costs[j];
+            costSums[0] = Integer.parseInt(costStrArr[0]);
+
+            for (int j = 1; j < N; j++) {
+                costSums[j] = costSums[j - 1] + Integer.parseInt(costStrArr[j]);
             }
 
-            float minAvg = Float.MAX_VALUE;
+            double minAvg = Float.MAX_VALUE;
             for (int days = L; days <= N; days++) {
                 int sumCases = N - days + 1;
-                int[] sumArr = new int[sumCases];
+                int minSum = Integer.MAX_VALUE;
 
                 for (int start = 0; start < sumCases; start++) {
-                    sumArr[start] = costSums[start + days - 1] - (start > 0 ? costSums[start - 1] : 0);
+                    minSum = Math.min(minSum, costSums[start + days - 1] - (start > 0 ? costSums[start - 1] : 0));
                 }
 
-                minAvg = Math.min(minAvg, (float) Arrays.stream(sumArr).min().getAsInt() / days);
+                minAvg = Math.min(minAvg, (double) minSum / days);
             }
 
             sb.append(String.format("%.8f", minAvg)).append("\n");
