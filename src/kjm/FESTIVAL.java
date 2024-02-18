@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class FESTIVAL {
+    // 문제
+    // https://algospot.com/judge/problem/read/FESTIVAL
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
