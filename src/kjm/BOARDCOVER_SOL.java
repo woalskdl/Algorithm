@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class BOARDCOVER_ANSWER {
+public class BOARDCOVER_SOL {
     // https://algospot.com/judge/problem/read/BOARDCOVER
     static int C;
     static int H, W;
