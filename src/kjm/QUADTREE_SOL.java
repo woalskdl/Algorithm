@@ -24,18 +24,14 @@ public class QUADTREE_SOL {
     }
 
     static String flip() {
-        char pixel = quad.charAt(idx);
+        char pixel = quad.charAt(idx++);
 
         if (pixel == 'w' || pixel == 'b')
             return pixel + "";
 
-        idx += 1;
         String ul = flip();
-        idx += 1;
         String ur = flip();
-        idx += 1;
         String ll = flip();
-        idx += 1;
         String lr = flip();
 
         return "x" + ll + lr + ul + ur;
