@@ -12,6 +12,8 @@ public class PACKING {
     private static String[] goods;
     private static int[] volumes;
     private static int[] needs;
+    private static int maxNeed;
+    private static int packCount;
     private static int[] brings;
     private static int[][] cache;
 
@@ -40,25 +42,18 @@ public class PACKING {
                 needs[i] = Integer.parseInt(inputs[2]);
             }
 
+            maxNeed = 0;
+            packCount = 0;
             brings = new int[N + 1];
-            Arrays.fill(brings, -1);
 
             cache = new int[N][1001];
 
             for (int i = 0; i < N; i++)
                 Arrays.fill(cache[i], -1);
 
-            sb.append(getMaxNeed(0, 0)).append(" ");
-
             reconstruct(0, 0);
 
-            int count = 0;
-            for (int i = 0; i < N; i++) {
-                if (brings[i] == 1)
-                    count += 1;
-            }
-
-            sb.append(count).append("\n");
+            sb.append(maxNeed).append(" ").append(packCount).append("\n");
 
             for (int i = 0; i < N; i++) {
                 if (brings[i] == 1)
@@ -92,6 +87,8 @@ public class PACKING {
         if (getMaxNeed(item, volume) == getMaxNeed(item + 1, volume)) {
             reconstruct(item + 1, volume);
         } else {
+            maxNeed += needs[item];
+            packCount += 1;
             brings[item] = 1;
             reconstruct(item + 1, volume + volumes[item]);
         }
