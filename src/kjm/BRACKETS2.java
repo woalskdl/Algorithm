@@ -64,9 +64,6 @@ public class BRACKETS2 {
             }
         }
 
-        if (!stack.isEmpty())
-            return false;
-
-        return matched;
+        return matched && stack.isEmpty();
     }
 }
