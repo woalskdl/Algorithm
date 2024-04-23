@@ -38,10 +38,8 @@ public class BRACKETS2 {
             if (bracket == '(' || bracket == '{' || bracket == '[') {
                 stack.push(bracket);
             } else {
-                if (stack.isEmpty()) {
-                    matched = false;
-                    break;
-                }
+                if (stack.isEmpty())
+                    return false;
 
                 char lastOpen = stack.pop();
 
@@ -61,7 +59,7 @@ public class BRACKETS2 {
 //                    case ')' -> (lastOpen == '(');
 //                    case '}' -> (lastOpen == '{');
 //                    case ']' -> (lastOpen == '[');
-//                    default -> matched;
+//                    default -> false;
 //                };
             }
         }
