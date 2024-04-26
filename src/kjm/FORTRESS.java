@@ -8,6 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class FORTRESS {
+    private static int N;
+    private static int[] x;
+    private static int[] y;
+    private static int[] r;
     private static int deepest;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,37 +20,27 @@ public class FORTRESS {
         int C = Integer.parseInt(br.readLine());
 
         while (C-- > 0) {
-            int N = Integer.parseInt(br.readLine().replaceAll(" ", ""));
+            N = Integer.parseInt(br.readLine().replaceAll(" ", ""));
 
-            String input = br.readLine();
-            String[] inputs = input.split(" ");
+            x = new int[N];
+            y = new int[N];
+            r = new int[N];
 
-            int x = Integer.parseInt(inputs[0]);
-            int y = Integer.parseInt(inputs[1]);
-            int r = Integer.parseInt(inputs[2]);
+            for (int i = 0; i < N; i++) {
+                String input = br.readLine();
+                String[] inputs = input.split(" ");
 
-            Castle castle = new Castle();
-            castle.x = x;
-            castle.y = y;
-            castle.r = r;
-
-            for (int i = 1; i < N; i++) {
-                input = br.readLine();
-                inputs = input.split(" ");
-
-                x = Integer.parseInt(inputs[0]);
-                y = Integer.parseInt(inputs[1]);
-                r = Integer.parseInt(inputs[2]);
-
-                castle(x, y, r, castle);
+                x[i] = Integer.parseInt(inputs[0]);
+                y[i] = Integer.parseInt(inputs[1]);
+                r[i] = Integer.parseInt(inputs[2]);
             }
+
+            Castle castle = castle(0);
 
             deepest = 0;
             int d = deepest(castle);
 
-            sb.append(Math.max(d, deepest));
-
-            sb.append("\n");
+            sb.append(Math.max(d, deepest)).append("\n");
         }
 
         System.out.println(sb);
@@ -69,46 +63,41 @@ public class FORTRESS {
         return depthList.get(0) + 1;
     }
 
-    private static void castle(int x, int y, int r, Castle parent) {
-        if (parent.castleList.isEmpty()) {
-            Castle c = new Castle();
-            c.x = x;
-            c.y = y;
-            c.r = r;
+    private static Castle castle(int root) {
+        Castle castle = new Castle();
 
-            parent.castleList.add(c);
-            return;
+        for (int i = 0; i < N; i++) {
+            if (isChild(root, i))
+                castle.castleList.add(castle(i));
         }
 
-        boolean found = false;
-        for (Castle c : parent.castleList) {
-            if (r > c.r)
-                continue;
+        return castle;
+    }
 
-            double distance = Math.pow(x - c.x, 2) + Math.pow(y - c.y, 2);
-            double R = Math.pow(c.r, 2);
+    private static boolean isChild(int root, int ch) {
+        if (!enclose(root, ch))
+            return false;
 
-            if (distance < R) {
-                castle(x, y, r, c);
-                found = true;
-                break;
-            }
+        for (int i = 0; i < N; i++) {
+            if (i != root && i != ch && enclose(root, i) && enclose(i, ch))
+                return false;
         }
 
-        if (!found) {
-            Castle c = new Castle();
-            c.x = x;
-            c.y = y;
-            c.r = r;
+        return true;
+    }
 
-            parent.castleList.add(c);
-        }
+    private static boolean enclose(int root, int ch)  {
+        if (r[ch] > r[root])
+            return false;
+
+        double distance = Math.pow(x[ch] - x[root], 2) + Math.pow(y[ch] - y[root], 2);
+        double R = Math.pow(r[root] - r[ch], 2);
+
+        return distance < R;
     }
 
     static class Castle {
-        int x;
-        int y;
-        int r;
         List<Castle> castleList = new ArrayList<>();
     }
+
 }
