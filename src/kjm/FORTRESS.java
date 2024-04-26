@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FORTRESS {
+    private static int deepest;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
@@ -28,7 +29,6 @@ public class FORTRESS {
             castle.x = x;
             castle.y = y;
             castle.r = r;
-            castle.depth = 0;
 
             for (int i = 1; i < N; i++) {
                 input = br.readLine();
@@ -41,18 +41,10 @@ public class FORTRESS {
                 castle(x, y, r, castle);
             }
 
-            List<Integer> depthList = new ArrayList<>();
+            deepest = 0;
+            int d = deepest(castle);
 
-            deepest(castle, depthList);
-
-            depthList.sort(Collections.reverseOrder());
-
-            if (depthList.size() == 1)
-                sb.append(depthList.get(0));
-            else if (depthList.isEmpty())
-                sb.append(0);
-            else
-                sb.append(Math.max(depthList.get(0) + depthList.get(1), depthList.get(0)));
+            sb.append(Math.max(d, deepest));
 
             sb.append("\n");
         }
@@ -60,14 +52,21 @@ public class FORTRESS {
         System.out.println(sb);
     }
 
-    private static void deepest(Castle castle, List<Integer> depthList) {
-        if (castle.castleList.isEmpty()) {
-            depthList.add(castle.depth);
-            return;
-        }
+    private static int deepest(Castle castle) {
+        List<Integer> depthList = new ArrayList<>();
 
-        for (Castle c : castle.castleList)
-            deepest(c, depthList);
+        for (int i = 0; i < castle.castleList.size(); i++)
+            depthList.add(deepest(castle.castleList.get(i)));
+
+        if (depthList.isEmpty())
+            return 0;
+
+        depthList.sort(Collections.reverseOrder());
+
+        if (depthList.size() >= 2)
+            deepest = Math.max(deepest, 2 + depthList.get(0) + depthList.get(1));
+
+        return depthList.get(0) + 1;
     }
 
     private static void castle(int x, int y, int r, Castle parent) {
@@ -76,7 +75,6 @@ public class FORTRESS {
             c.x = x;
             c.y = y;
             c.r = r;
-            c.depth = parent.depth + 1;
 
             parent.castleList.add(c);
             return;
@@ -84,10 +82,13 @@ public class FORTRESS {
 
         boolean found = false;
         for (Castle c : parent.castleList) {
-            double distance = Math.pow(x - c.x, 2) + Math.pow(y - c.y, 2);
-            double biggerR = Math.pow(Math.max(r, c.r), 2);
+            if (r > c.r)
+                continue;
 
-            if (distance < biggerR) {
+            double distance = Math.pow(x - c.x, 2) + Math.pow(y - c.y, 2);
+            double R = Math.pow(c.r, 2);
+
+            if (distance < R) {
                 castle(x, y, r, c);
                 found = true;
                 break;
@@ -99,7 +100,6 @@ public class FORTRESS {
             c.x = x;
             c.y = y;
             c.r = r;
-            c.depth = parent.depth + 1;
 
             parent.castleList.add(c);
         }
@@ -109,7 +109,6 @@ public class FORTRESS {
         int x;
         int y;
         int r;
-        int depth;
         List<Castle> castleList = new ArrayList<>();
     }
 }
