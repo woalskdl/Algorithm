@@ -3,6 +3,7 @@ package kjm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class BOGGLE_1 {
     // 문제
@@ -10,6 +11,7 @@ public class BOGGLE_1 {
 
     static int C;
     static char[][] boggle;
+    static int[][][] memo;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,6 +31,13 @@ public class BOGGLE_1 {
 
             for (int i = 0; i < N; i++) {
                 String word = br.readLine();
+
+                memo = new int[5][5][11];
+
+                for (int j = 0; j < 5; j++) {
+                    for (int k = 0; k < 5; k++)
+                        Arrays.fill(memo[j][k], -1);
+                }
 
                 boolean found = false;
                 for (int y = 0; y < 5 && !found; y++) {
@@ -54,6 +63,9 @@ public class BOGGLE_1 {
         if (charIdx == word.length())
             return true;
 
+        if (memo[y][x][charIdx] != -1)
+            return memo[y][x][charIdx] == 1;
+
         char findChar = word.charAt(charIdx);
         boolean found = false;
 
@@ -67,8 +79,11 @@ public class BOGGLE_1 {
             }
         }
 
+        if (found)
+            memo[y][x][charIdx] = 1;
+        else
+            memo[y][x][charIdx] = 0;
+
         return found;
     }
 }
-
-// 시간초과

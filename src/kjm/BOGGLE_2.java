@@ -3,6 +3,7 @@ package kjm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class BOGGLE_2 {
     // 문제
@@ -10,14 +11,15 @@ public class BOGGLE_2 {
 
     static int C;
     static char[][] boggle;
+    static int[][][] memo;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         C = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
 
         while (C > 0) {
+            StringBuilder sb = new StringBuilder();
             boggle = new char[5][5];
 
             for (int i = 0; i < 5; i++) {
@@ -30,6 +32,8 @@ public class BOGGLE_2 {
             for (int i = 0; i < N; i++) {
                 String word = br.readLine();
 
+                memo = new int[5][5][11];
+
                 boolean found = false;
                 for (int y = 0; y < 5 && !found; y++) {
                     for (int x = 0; x < 5 && !found; x++) {
@@ -41,9 +45,9 @@ public class BOGGLE_2 {
             }
 
             C--;
+            System.out.print(sb);
         }
 
-        System.out.println(sb);
     }
 
     static final int[] dy = {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -53,19 +57,30 @@ public class BOGGLE_2 {
         if (!inRange(y, x))
             return false;
 
+        if (memo[y][x][word.length()] != 0)
+            return memo[y][x][word.length()] == 1;
+
         char firstChar = word.charAt(0);
 
-        if (boggle[y][x] != firstChar)
+        if (boggle[y][x] != firstChar) {
+            memo[y][x][word.length()] = -1;
             return false;
+        }
 
-        if (word.length() == 1)
+        if (word.length() == 1) {
+            memo[y][x][word.length()] = 1;
             return true;
+        }
 
         boolean found = false;
 
-        for (int i = 0; i < 8 && !found; i++) {
+        for (int i = 0; i < 8 && !found; i++)
             found = findWord(word.substring(1), y + dy[i], x + dx[i]);
-        }
+
+        if (found)
+            memo[y][x][word.length()] = 1;
+        else
+            memo[y][x][word.length()] = -1;
 
         return found;
     }
